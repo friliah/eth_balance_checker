@@ -4,7 +4,7 @@ Shows total balance of all wallets and wallets with balance for specific tokens
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine. At the end you will get something like this:
+These instructions will get you a copy of the project up and running on your local machine. One wallet per 5 seconds (API limitation), if u check thousands of wallets, can take a lot of RAM.  At the end you will get something like this:
 
 ![table](http://i65.tinypic.com/xojzp2.png)
 
