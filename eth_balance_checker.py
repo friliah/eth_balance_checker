@@ -36,6 +36,7 @@ from tabulate import tabulate
 
 non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
 checked_addresses = {}
+checked_counter = 0
 
 
 def get_current_tokens_list(total_dict):
@@ -159,9 +160,6 @@ def print_nonzero_balance_response(response):
         print('#'*10, response['address'])
         for token in response['tokens']:
             print(token['tokenInfo']['name'].translate(non_bmp_map), token['tokenInfo']['symbol'].translate(non_bmp_map), float(token['balance'])/(10**int(token['tokenInfo']['decimals'])))
-    if eth_balance > 0 or 'tokens' in response:
-        with open('wallets_w_balance.txt', 'a') as file:
-            file.write(response['address']+'\n')
 
 
 def recursive_check_addresses(addresses_list,START_TIME, show_individual_wallet_balance,iteration=0):
@@ -171,13 +169,17 @@ def recursive_check_addresses(addresses_list,START_TIME, show_individual_wallet_
     print('iteration', iteration)
     print('addresses to ckeck',len(addresses_list))
     #dict w key = address and value = response
+    if iteration == 0:
+        total_wallets = len(addresses_list)
     global checked_addresses
+    global checked_counter
     addresses_check_later = []
     for number, address in enumerate(addresses_list):
         try:
             balance_response = get_balance_response(address)
             if balance_response:
-                print('#'*10,number,'out of',len(addresses_list),'iteration', iteration)
+                checked_counter += 1
+                print('#'*10,checked_counter,'out of', total_wallets,'iteration', iteration)
                 print(int(time.time()-START_TIME), 'seconds')
                 if show_individual_wallet_balance:
                     print_nonzero_balance_response(balance_response)
