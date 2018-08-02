@@ -26,7 +26,7 @@ You need Python:
 
 1. Click on green button ```Clone or download```, select ```Download ZIP```, download and extract it.
 
-2. Open command line in extracted folder ([how to open](https://www.thewindowsclub.com/how-to-open-command-prompt-from-right-click-menu)) and write ```pip install requirements.txt```
+2. Open command line in extracted folder ([how to open](https://www.thewindowsclub.com/how-to-open-command-prompt-from-right-click-menu)) and write ```pip install -r requirements.txt```
 
 
 ## Using
