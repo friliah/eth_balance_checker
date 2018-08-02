@@ -162,15 +162,13 @@ def print_nonzero_balance_response(response):
             print(token['tokenInfo']['name'].translate(non_bmp_map), token['tokenInfo']['symbol'].translate(non_bmp_map), float(token['balance'])/(10**int(token['tokenInfo']['decimals'])))
 
 
-def recursive_check_addresses(addresses_list,START_TIME, show_individual_wallet_balance,iteration=0):
+def recursive_check_addresses(addresses_list,START_TIME, show_individual_wallet_balance, total_addresses, iteration=0):
     if len(addresses_list) == 0:
         print('end of recursion')
         return
     print('iteration', iteration)
     print('addresses to ckeck',len(addresses_list))
     #dict w key = address and value = response
-    if iteration == 0:
-        total_wallets = len(addresses_list)
     global checked_addresses
     global checked_counter
     addresses_check_later = []
@@ -179,7 +177,7 @@ def recursive_check_addresses(addresses_list,START_TIME, show_individual_wallet_
             balance_response = get_balance_response(address)
             if balance_response:
                 checked_counter += 1
-                print('#'*10,checked_counter,'out of', total_wallets,'iteration', iteration)
+                print('#'*10,checked_counter,'out of', total_addresses,'iteration', iteration)
                 print(int(time.time()-START_TIME), 'seconds')
                 if show_individual_wallet_balance:
                     print_nonzero_balance_response(balance_response)
@@ -191,8 +189,7 @@ def recursive_check_addresses(addresses_list,START_TIME, show_individual_wallet_
             print(e, address)
             addresses_check_later.append(address)
     iteration += 1
-    recursive_check_addresses(addresses_check_later,START_TIME, show_individual_wallet_balance, iteration)
-
+    recursive_check_addresses(addresses_check_later,START_TIME, show_individual_wallet_balance,total_addresses, iteration)
 
 def get_transactions(address):
     call = Address(address=address)
@@ -207,7 +204,8 @@ def main(addresses_file='addresses.txt',last=None, show_individual_wallet_balanc
     addresses = list(dict.fromkeys(raw_addresses))[:last]
     total_addresses_qty = len(addresses)
     print('total_addresses_qty',total_addresses_qty, '\n')
-    recursive_check_addresses(addresses, START_TIME, show_individual_wallet_balance=show_individual_wallet_balance)
+    recursive_check_addresses(addresses, START_TIME, show_individual_wallet_balance=show_individual_wallet_balance,
+                              total_addresses=total_addresses_qty)
     global checked_addresses
     total_balance_dict = get_total_balance_dict(list(checked_addresses.values()))
     print_table_wallet_balance(total_balance_dict)
